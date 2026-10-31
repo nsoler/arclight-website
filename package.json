@@ -1,14 +1,28 @@
 {
-  "name": "arclightvfx-website",
+  "name": "arclight-design-collection",
   "private": true,
-  "version": "0.1.0",
   "type": "module",
+  "workspaces": [
+    "website1",
+    "website2",
+    "website3",
+    "website4"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "vite": "^6.4.5"
+    "dev": "npm run dev --workspace=website1",
+    "dev:1": "npm run dev --workspace=website1",
+    "dev:2": "npm run dev --workspace=website2",
+    "dev:3": "npm run dev --workspace=website3",
+    "build": "npm run build --workspaces",
+    "build:1": "npm run build --workspace=website1",
+    "build:2": "npm run build --workspace=website2",
+    "build:3": "npm run build --workspace=website3",
+    "start": "npm start --workspace=website1",
+    "start:1": "npm start --workspace=website1",
+    "start:2": "npm start --workspace=website2",
+    "start:3": "npm start --workspace=website3",
+    "dev:4": "npm run dev --workspace=website4",
+    "build:4": "npm run build --workspace=website4",
+    "start:4": "npm start --workspace=website4"
   }
 }

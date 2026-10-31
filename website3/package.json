@@ -1,0 +1,14 @@
+{
+  "name": "arclightvfx-website3",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.4.5"
+  }
+}

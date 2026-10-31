@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/arclight-icon.svg" />
+    <title>ArclightVFX — The Creative Chapter</title>
+    <meta name="description" content="ArclightVFX is an open-source Rust compositor for indie VFX artists. Combine GPU-accelerated 2D and 3D, procedural geometry, Gaussian splats, tracking and particles in one node graph. In active beta development." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <a class="skip-link" href="#top">Skip to content</a>
+    <canvas id="sky" aria-hidden="true"></canvas>
+
+    <header class="nav">
+      <a class="brand" href="#top">
+        <img src="/arclight-icon.svg" alt="" width="36" height="36" />
+        <span>Arclight<b>VFX</b></span>
+      </a>
+      <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">Menu +</button><nav id="main-nav" aria-label="Main navigation">
+        <a href="#gpu">GPU</a>
+        <a href="#power">Core</a>
+        <a href="#dojo">Dojo</a>
+        <a href="#arsenal">Arsenal</a>
+        <a href="#episodes">Features</a>
+        <a href="#script">Script</a>
+        <a href="#next">Next</a>
+      </nav>
+      <a class="btn btn-small" href="#download">Download</a>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="speedlines" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <p class="kicker"><span class="status-dot"></span> 創造の時間 / INDIE STORIES · OPEN-SOURCE BETA</p>
+          <h1>
+            <span class="h1-a">Make a scene.</span>
+            <span class="h1-b">Build a world.<br><em>Frame by frame.</em></span>
+          </h1>
+          <p class="lede">
+            <strong>ArclightVFX</strong> is an open-source, node-based compositor built in Rust for indie VFX artists and small teams. Key your footage, solve the camera, build procedural environments and blend Gaussian splat captures — with <em>GPU-accelerated 2D and 3D in one graph.</em>
+          </p>
+          <div class="cta">
+            <a class="btn" href="#download">Begin your story ↗</a>
+            <a class="btn btn-ghost" href="#dojo">Enter the node dojo</a>
+          </div>
+        </div>
+<div class="hero-art anime-art">
+   <div class="art-label">原画 / THE ART OF COMPOSITING</div>
+   <svg viewBox="0 0 600 620" role="img" aria-labelledby="anime-title"><title id="anime-title">Original anime-inspired landscape: a red sun over layered mountains, a torii gate and drifting cherry blossoms</title>
+   <defs><pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#27243a" opacity=".17"/></pattern><clipPath id="frame"><path d="M20 50 L560 15 580 555 40 595Z"/></clipPath></defs>
+   <g clip-path="url(#frame)"><path fill="#ecd8cf" d="M0 0h600v620H0z"/><circle cx="315" cy="235" r="161" fill="#e74f4c"/><circle cx="315" cy="235" r="161" fill="url(#dots)"/>
+   <path d="M0 390 130 240 207 308 327 162 600 425V620H0" fill="#b1b2d1"/><path d="m204 308 123-146 65 100-61-28-30 33-12-18Z" fill="#fff8e9"/>
+   <path d="M0 465 180 338 297 402 465 280 600 376V620H0" fill="#6e729c"/><path d="M0 520 145 450 310 491 440 416 600 455V620H0" fill="#373a5a"/>
+   <path d="M0 555q150-100 290-15t310-12v92H0" fill="#252437"/>
+   <g fill="#ed6655" stroke="#252437" stroke-width="5"><path d="M378 370h17l-8 187h-20zM494 370h17l12 187h-20z"/><path d="M345 345q102 24 201-9l-5 22q-93 28-191 10z"/><path d="M360 395h173v15H360z"/></g>
+   <path d="M-15 114Q120 95 208 10M50 102l25-73M114 76l75 17" fill="none" stroke="#252437" stroke-width="10"/>
+   <g fill="#fff3e8" stroke="#e77f91" stroke-width="2"><path transform="translate(55 88) rotate(0)" d="M0 0Q-24-28-7-30 5-40 10-12 28-20 24-7 30 7 9 7 6 26-5 16-20 20-15 4Z"/><path transform="translate(100 70) rotate(35)" d="M0 0Q-24-28-7-30 5-40 10-12 28-20 24-7 30 7 9 7 6 26-5 16-20 20-15 4Z"/><path transform="translate(154 38) rotate(15)" d="M0 0Q-24-28-7-30 5-40 10-12 28-20 24-7 30 7 9 7 6 26-5 16-20 20-15 4Z"/><path transform="translate(179 87) rotate(60)" d="M0 0Q-24-28-7-30 5-40 10-12 28-20 24-7 30 7 9 7 6 26-5 16-20 20-15 4Z"/><path transform="translate(70 33) rotate(12)" d="M0 0Q-24-28-7-30 5-40 10-12 28-20 24-7 30 7 9 7 6 26-5 16-20 20-15 4Z"/><path transform="translate(502 160) rotate(40)" d="M0 0Q-24-28-7-30 5-40 10-12 28-20 24-7 30 7 9 7 6 26-5 16-20 20-15 4Z"/><path transform="translate(483 218) rotate(80)" d="M0 0Q-24-28-7-30 5-40 10-12 28-20 24-7 30 7 9 7 6 26-5 16-20 20-15 4Z"/><path transform="translate(112 335) rotate(50)" d="M0 0Q-24-28-7-30 5-40 10-12 28-20 24-7 30 7 9 7 6 26-5 16-20 20-15 4Z"/><path transform="translate(535 305) rotate(20)" d="M0 0Q-24-28-7-30 5-40 10-12 28-20 24-7 30 7 9 7 6 26-5 16-20 20-15 4Z"/>
+   <path d="M85 590q220-75 390 20" fill="none" stroke="#f6a19b" stroke-width="3"/></g>
+   <path d="M20 50 560 15 580 555 40 595Z" fill="none" stroke="#252437" stroke-width="5"/>
+   <text x="48" y="181" fill="#252437" font-size="54" font-weight="900" style="writing-mode:vertical-rl">光と創造</text>
+   </svg><div class="art-stamp">FRAME<br><strong>001</strong><br>IMAGINATION → IMAGE</div>
+   <div class="art-caption">A WORLD BUILT ONE LAYER AT A TIME. ↗</div></div>
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee-track">
+            <span>GPU COMPOSITING</span><span>·</span><span>KEYER</span><span>★</span><span>TRACKER</span><span>★</span><span>ROTO</span><span>★</span>
+            <span>CAMERA SOLVE</span><span>★</span><span>GAUSSIAN SPLATS</span><span>★</span><span>PARTICLES</span><span>★</span>
+            <span>GEOMETRY NODES</span><span>★</span><span>MOTION BLUR</span><span>★</span><span>EXR · DPX · PRORES</span><span>★</span>
+            <span>GPU COMPOSITING</span><span>·</span><span>KEYER</span><span>★</span><span>TRACKER</span><span>★</span><span>ROTO</span><span>★</span>
+            <span>CAMERA SOLVE</span><span>★</span><span>GAUSSIAN SPLATS</span><span>★</span><span>PARTICLES</span><span>★</span>
+            <span>GEOMETRY NODES</span><span>★</span><span>MOTION BLUR</span><span>★</span><span>EXR · DPX · PRORES</span><span>★</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="gpu" class="section gpu-section">
+        <div class="gpu-intro">
+          <span class="ep">GPU / BUILT INTO THE WORKFLOW</span>
+          <h2>More time shaping<br>the next frame.</h2>
+          <p>Work through keys, lens fixes and 3D scenes with GPU rendering paths built on <code>wgpu</code>: Vulkan on Linux and Metal on macOS. Supported results stay on the GPU between operations and during cached playback.</p>
+          <a class="text-link" href="#download">Explore the beta <span>↗</span></a>
+        </div>
+        <div class="gpu-details">
+          <article><span>01 / COMPOSITE</span><h3>From the key to the final merge.</h3><p>GPU paths cover Blur, Keyer, lens distortion and motion-blurred transforms. Color, merge, channel and resize nodes also use the GPU when their inputs are already there.</p></article>
+          <article><span>02 / BUILD IN 3D</span><h3>Light it. Move it. See it together.</h3><p>Scanline rendering and shaded 3D previews have GPU paths for meshes, shadows, motion blur, Gaussian splats and large particle sprites.</p></article>
+          <p class="gpu-note"><b>GPU where it helps. CPU fallback where needed.</b> Coverage depends on the operation, hardware and memory budget. Toggle acceleration in Preferences and check your setup with <code>arclight gpu --check</code>. Features described here reflect the development source; available release builds may differ.</p>
+        </div>
+      </section>
+
+      <!-- CORE -->
+      <section id="power" class="section">
+        <header class="sec-head">
+          <span class="ep">01 / COMPOSITING ENGINE</span>
+          <h2>Every great scene starts here.</h2>
+          <p>Keep bright highlights, soft edges and render passes intact as you combine live action and CG. A 32-bit float, linear-light pipeline gives small productions room to refine the image.</p>
+        </header>
+        <div class="stats">
+          <article class="stat">
+            <div class="stat-num">32<small>bit</small></div>
+            <h3>Float RGBA</h3>
+            <p>Every pixel, every node. Values above 1.0 survive until you decide otherwise.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-num">lin<small>ear</small></div>
+            <h3>Linear light</h3>
+            <p>Composite in linear light for natural blends, with sRGB conversions at supported image I/O boundaries.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-num">pre<small>mult</small></div>
+            <h3>Associated alpha</h3>
+            <p>Premultiplied throughout — blurs and merges fade cleanly with no dark fringing.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-num">DAG</div>
+            <h3>Cached graph</h3>
+            <p>Each node cached by a hash of op, params and inputs. Edit one; only downstream re-renders.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-num">∞<small>cores</small></div>
+            <h3>Parallel</h3>
+            <p>Per-pixel work spread across every core with Rayon; a frame cache reuses results as you scrub.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-num">200<small>undo</small></div>
+            <h3>Safe to explore</h3>
+            <p>Every graph edit is undoable. A whole slider drag is one step.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="indie" class="section">
+        <header class="sec-head">
+          <span class="ep">FOR INDIE VFX ARTISTS</span>
+          <h2>Small team. Bigger scenes.</h2>
+          <p>From a solo passion project to a short-film crew, build effects around the footage you have and the story you want to tell.</p>
+        </header>
+        <div class="cards">
+          <article class="card"><div class="card-top"><span class="chip">2D COMPOSITING</span></div><h3>Make the screen replacement stick.</h3><p>Track the plate, link a Corner Pin, roto the foreground and match the insert with grading and lens distortion. Keep the moving parts connected when the shot changes.</p></article>
+          <article class="card"><div class="card-top"><span class="chip">GEOMETRY NODES</span></div><h3>Dress a world without placing every rock.</h3><p>Scatter points over surfaces or inside volumes. Instance meshes, cards or splat captures, then vary scale and color with attributes, noise, falloffs and image masks.</p></article>
+          <article class="card"><div class="card-top"><span class="chip">3D + GAUSSIAN SPLATS</span></div><h3>Bring a captured location into the shot.</h3><p>Import an existing splat capture, crop stray points and grade it alongside CG. Use camera tracking, holdouts and depth-aware rendering to combine the scene with your plate.</p></article>
+        </div>
+      </section>
+
+      <!-- DOJO -->
+      <section id="dojo" class="section">
+        <header class="sec-head">
+          <span class="ep">02 / INTERACTIVE NODE GRAPH</span>
+          <h2>The node dojo</h2>
+          <p>An illustrative browser demo of node-based compositing, separate from the Rust desktop engine. Click a node to open its properties, tweak, and watch the viewer update.</p>
+        </header>
+        <div class="dojo">
+          <div class="panel dojo-graph">
+            <div class="panel-title">Node Graph</div>
+            <svg id="graph" viewBox="0 0 420 360" role="img" aria-label="Example node graph"></svg>
+          </div>
+          <div class="panel dojo-viewer">
+            <div class="panel-title">Viewer <span id="viewing" class="muted"></span></div>
+            <canvas id="viewer" width="480" height="270"></canvas>
+            <div class="readout" id="readout">hover the image for a float readout</div>
+          </div>
+          <div class="panel dojo-props">
+            <div class="panel-title">Properties</div>
+            <div id="props"></div>
+          </div>
+        </div>
+        <details class="json-peek">
+          <summary>See it as Arclight graph JSON</summary>
+          <pre><code id="graph-json"></code></pre>
+        </details>
+      </section>
+
+      <!-- ARSENAL -->
+      <section id="arsenal" class="section">
+        <header class="sec-head">
+          <span class="ep">03 / NODE LIBRARY</span>
+          <h2>Your creative arsenal.</h2>
+          <p>Build a shot from readable steps: key, roto, track, grade, scatter, light and merge. Animate numeric controls and use masks on supported image nodes.</p>
+        </header>
+        <div class="tabs" id="cat-tabs" role="tablist"></div>
+        <div class="cards" id="op-cards"></div>
+      </section>
+
+      <!-- EPISODES -->
+      <section id="episodes" class="section">
+        <header class="sec-head">
+          <span class="ep">04 / CREATIVE TOOLKIT</span>
+          <h2>One graph. More possibilities.</h2>
+          <p>Replace a screen, extend a set or bring a captured location into a short film. Connect the tools in one graph and keep refining each part of the shot.</p>
+        </header>
+        <div class="episodes" id="episode-list"></div>
+      </section>
+
+      <!-- SCRIPT -->
+      <section id="script" class="section">
+        <header class="sec-head">
+          <span class="ep">05 / SCRIPTING &amp; AUTOMATION</span>
+          <h2>Creative control, programmable.</h2>
+          <p>Python, MCP for AI agents, native plugins and live formulas all drive one engine API. Scripts can even attach to the running app — their edits land in your undo history.</p>
+        </header>
+        <div class="code-tabs" id="code-tabs"></div>
+        <div class="code-panel panel">
+          <pre><code id="code-body"></code></pre>
+          <p class="code-note" id="code-note"></p>
+        </div>
+      </section>
+
+      <!-- FORMATS -->
+      <section class="section">
+        <header class="sec-head">
+          <span class="ep">06 / MEDIA &amp; FORMATS</span>
+          <h2>Pipeline-ready I/O</h2>
+        </header>
+        <div class="formats">
+          <div class="fmt panel"><h3>In</h3><ul>
+            <li><b>EXR</b> 32-bit float, every pass as a layer, data windows</li>
+            <li><b>DPX</b> 8/10/12/16-bit &amp; float, log → linear via Cineon</li>
+            <li><b>TIFF · TGA · WebP · PNG · JPEG · HDR</b></li>
+            <li><b>Video</b> mp4 · mov · mkv · mxf · webm (via ffmpeg, 10-bit+ kept at 16-bit)</li>
+            <li><b>Sequences</b> drop one frame, get <code>shot.####.exr</code></li>
+            <li><b>3D</b> Alembic <code>.abc</code> · splats <code>.ply .splat .spz</code></li>
+          </ul></div>
+          <div class="fmt panel"><h3>Out</h3><ul>
+            <li><b>ProRes</b> 422 HQ · 4444 + alpha</li>
+            <li><b>DNxHR</b> HQX · 444 (10-bit)</li>
+            <li><b>HEVC · AV1</b> 10-bit · <b>H.264</b> · <b>VP9</b> (+ alpha)</li>
+            <li><b>DPX</b> 10-bit log, video, or 32-bit float</li>
+            <li><b>EXR</b> with depth, P, N, uv, motion, mattes, diffuse…</li>
+            <li><b>Audio</b> carried through to .mov / .mp4 in sync</li>
+          </ul></div>
+        </div>
+      </section>
+
+      <!-- NEXT -->
+      <section id="next" class="section">
+        <header class="sec-head">
+          <span class="ep">07 / ROADMAP</span>
+          <h2>The next chapter</h2>
+          <p>The goal: a capable compositing workspace for independent films, music videos and ambitious personal projects. These directions are future work, with no promised delivery date.</p>
+        </header>
+        <ol class="next">
+          <li><b>More room for large plates</b> — tiled evaluation and region-of-interest processing are roadmap ideas</li>
+          <li><b>Viewer color management</b> — OCIO / GPU display transforms are roadmap ideas</li>
+          <li><b>A broader indie workflow</b> — continued development of the shared 2D, 3D and procedural geometry toolset</li>
+        </ol>
+      </section>
+
+      <!-- DOWNLOAD -->
+      <section id="download" class="section download">
+        <div class="dl-card">
+          <span class="ep">08 / GET ARCLIGHTVFX</span>
+          <h2>Your next chapter starts here.</h2>
+          <p>Open source under MIT OR Apache-2.0, with no software license fee. Built for artists who want to explore, adapt and grow their own workflow. The project documents Linux x86_64 builds, universal macOS builds (Apple Silicon and Intel), and Python wheels.
+            ArclightVFX is actively developed beta software; evaluate it on your own shots. Choose an available build from the release list; replace <code>VERSION</code> below with its version. Video I/O needs <code>ffmpeg</code> on your <code>PATH</code>.</p>
+          <div class="cta">
+            <a class="btn" href="https://github.com/nsoler/arclight/releases">Browse beta releases ↗</a>
+            <a class="btn btn-ghost" href="https://github.com/nsoler/arclight">Source on GitHub</a>
+          </div>
+          <pre class="term"><code><span class="c">$</span> tar xf arclightvfx-VERSION-linux-x86_64.tar.gz &amp;&amp; ./install.sh
+<span class="c">$</span> arclight-gui comp.json
+<span class="c">$</span> pip install arclt-VERSION-cp310-abi3-*.whl</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>ArclightVFX — open-source compositing for independent artists. Written in Rust. MIT OR Apache-2.0.</p>
+      <p class="muted">Read. Connect. Create.</p>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

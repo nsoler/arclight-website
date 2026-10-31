@@ -1,5 +1,5 @@
-// Content for the arsenal, episodes and scripting sections, condensed from
-// the Arclight README / HANDOFF / TODO.
+// Product copy verified against the Arclight 0.13.21 development source.
+// See ../../FEATURES.md for scope, evidence and release caveats.
 
 export const categories = [
   { id: 'all', label: 'All', icon: 'grid' },
@@ -9,11 +9,17 @@ export const categories = [
   { id: 'shape', label: 'Shapes & Roto', icon: 'curve' },
   { id: 'track', label: 'Tracking', icon: 'target' },
   { id: '3d', label: '3D', icon: 'cube' },
+  { id: 'geo', label: 'Geometry Nodes', icon: 'cube' },
   { id: 'fx', label: 'Particles', icon: 'particles' },
   { id: 'io', label: 'I/O', icon: 'io' },
 ]
 
 export const ops = [
+  { cat: 'geo', name: 'Scatter · Instance on Points', desc: 'Dress sets with meshes, cards or splat captures. Scatter over surfaces, within volumes or on tracker points; control density with a mask.' },
+  { cat: 'geo', name: 'Attribute Set · Attribute Noise', desc: 'Vary position, size and color with formulas and repeatable noise instead of editing every element by hand.' },
+  { cat: 'geo', name: 'Falloff · Attribute from Image', desc: 'Shape procedural changes by distance or a soft region, and sample a plate or painted map into geometry attributes.' },
+  { cat: 'geo', name: 'Transform Geo · Delete Geo', desc: 'Move groups together or remove points, faces and instances with a region or expression. Inspect the result in the geometry spreadsheet.' },
+  { cat: 'geo', name: 'Fit Plane · Realize Instances', desc: 'Fit a ground or holdout plane to solved points; turn instances into individual scene objects for further edits.' },
   { cat: 'color', name: 'Grade', desc: 'Lift / gain / gamma per channel on unassociated color.', mask: true },
   { cat: 'color', name: 'Exposure', desc: 'Push or pull in photographic stops (×2 per stop).', mask: true },
   { cat: 'color', name: 'Saturation', desc: 'About Rec. 709 luminance; 0 is grayscale.', mask: true },
@@ -50,15 +56,20 @@ export const ops = [
 
 export const episodes = [
   {
+    tag: 'GEO', title: 'Build detail procedurally', icon: 'cube',
+    body: 'Turn a few assets into a dressed environment with geometry nodes. Scatter stable points, instance your meshes or cards, then use attributes to vary size, orientation and tint. Project a plate into attributes to help the detail belong in the shot.',
+    bullets: ['Surface, volume and tracker-point scattering', 'Noise, masks and distance falloffs', 'Geometry spreadsheet for inspecting points and instances'],
+  },
+  {
     tag: '3D',
-    title: 'A Blender-style 3D view',
+    title: 'Build the set around your plate',
     icon: 'cube',
     body: 'Press Tab over the viewer. Orbit, numpad views, a pie menu on backtick, G / R / S with typed values (G X 2 Enter), axis-constrained gizmos. Cards draw textured, cameras draw frusta and paths, solved point clouds draw colored by error.',
     bullets: ['Look through any camera or light (0)', 'Motion-blur preview once the view settles', 'One-click 3D Camera Setup on any wire'],
   },
   {
     tag: 'TRACK',
-    title: 'Track it, solve it, link it',
+    title: 'Make your CG follow the camera',
     icon: 'target',
     body: '2D tracks become live-linked Transforms and Corner Pins. The Camera Tracker solves the shot — including K1/K2 lens distortion — and exports a Camera that follows the solve if you re-solve or reset the origin.',
     bullets: ['Mask out moving objects', 'Pick points over the rendered scene', 'Place cards and locators on solved points'],
@@ -67,12 +78,12 @@ export const episodes = [
     tag: 'SPLAT',
     title: 'Gaussian splats in the comp',
     icon: 'cloud',
-    body: 'Read captures from Postshot, Polycam or Luma (.ply, .splat, .spz) with spherical harmonics up to degree 3. They render with your cards and meshes, sorted by depth, with passes, holdouts and motion blur.',
-    bullets: ['Splat Crop: clear floaters with a 3D box', 'Splat Color: grade exactly from every angle', '2–2.5× faster renderer with a per-view cache'],
+    body: 'Import existing captures in supported .ply, .splat or .spz layouts with spherical harmonics up to degree 3. They render with your cards and meshes, sorted by depth, with passes, holdouts and motion blur.',
+    bullets: ['Splat Crop: clear floaters with a 3D box', 'Splat Color: grade exactly from every angle', 'GPU rendering paths with CPU fallback'],
   },
   {
     tag: 'FX',
-    title: 'Particles with attitude',
+    title: 'Add sparks, trails and atmosphere',
     icon: 'particles',
     body: 'Emit from shapes, geometry or a mask; push with gravity, wind, curl noise and vortices; bounce off planes. Render as sprites with looping texture sequences, or instance 3D objects. Streaks curve under gravity with motion blur.',
     bullets: ['Emitters on moving cards leave trails', 'Simulations shared and stepped, not re-run', 'Forces editable with 3D gizmos'],
