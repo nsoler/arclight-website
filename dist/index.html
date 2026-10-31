@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="./arclight-icon.svg" />
+    <title>ArclightVFX Compositor</title>
+    <meta name="description" content="ArclightVFX: a node-graph compositor for effects artists — GPU acceleration foundation, 32-bit float, linear light, keying, tracking, 3D, Gaussian splats, particles, Python and MCP." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="./assets/index-DkTh4p5p.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DVOeqDFI.css">
+  </head>
+  <body>
+    <canvas id="sky" aria-hidden="true"></canvas>
+
+    <header class="nav">
+      <a class="brand" href="#top">
+        <img src="./arclight-icon.svg" alt="" width="36" height="36" />
+        <span>Arclight<b>VFX</b></span>
+      </a>
+      <nav>
+        <a href="#gpu">GPU</a>
+        <a href="#power">Core</a>
+        <a href="#dojo">Dojo</a>
+        <a href="#arsenal">Arsenal</a>
+        <a href="#episodes">Features</a>
+        <a href="#script">Script</a>
+        <a href="#next">Next</a>
+      </nav>
+      <a class="btn btn-small" href="#download">Download</a>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="speedlines" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <p class="kicker"><span class="status-dot"></span> THE GPU CHAPTER · 0.12 BETA</p>
+          <h1>
+            <span class="h1-a">Your vision.</span>
+            <span class="h1-b">Every node.<br><em>All connected.</em></span>
+          </h1>
+          <p class="lede">
+            <strong>ArclightVFX Compositor</strong> is a node-graph compositor written in Rust —
+            32-bit float, linear light, and a complete world of keying, tracking, 3D, splats, and particles. Now entering a new chapter with <em>GPU acceleration.</em>
+          </p>
+          <div class="cta">
+            <a class="btn" href="#download">Get the beta</a>
+            <a class="btn btn-ghost" href="#dojo">Explore the node graph ↗</a>
+          </div>
+        </div>
+        <div class="hero-art product-banner">
+          <div class="product-seal">
+            <span class="seal-spark seal-spark-one" aria-hidden="true">✦</span>
+            <span class="seal-spark seal-spark-two" aria-hidden="true">✦</span>
+            <div class="seal-face">
+              <span class="seal-eyebrow">BUILT IN RUST · MADE FOR ARTISTS</span>
+              <span class="seal-name">ARCLIGHT<span>VFX</span></span>
+              <span class="seal-subtitle">COMPOSITOR</span>
+              <span class="seal-rule" aria-hidden="true"></span>
+              <span class="seal-features">2D + 3D / ONE NODE GRAPH</span>
+            </div>
+            <div class="product-ribbon"><span class="ribbon-flash" aria-hidden="true">↯</span><span>GPU<br><b>ACCELERATED</b></span><span class="ribbon-flash" aria-hidden="true">↯</span></div>
+          </div>
+          <p class="banner-caption">THE NEXT CHAPTER IN COMPOSITING</p>
+        </div>
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee-track">
+            <span>GPU FOUNDATION</span><span>·</span><span>KEYER</span><span>★</span><span>TRACKER</span><span>★</span><span>ROTO</span><span>★</span>
+            <span>CAMERA SOLVE</span><span>★</span><span>GAUSSIAN SPLATS</span><span>★</span><span>PARTICLES</span><span>★</span>
+            <span>SCANLINE 3D</span><span>★</span><span>MOTION BLUR</span><span>★</span><span>EXR · DPX · PRORES</span><span>★</span>
+            <span>GPU FOUNDATION</span><span>·</span><span>KEYER</span><span>★</span><span>TRACKER</span><span>★</span><span>ROTO</span><span>★</span>
+            <span>CAMERA SOLVE</span><span>★</span><span>GAUSSIAN SPLATS</span><span>★</span><span>PARTICLES</span><span>★</span>
+            <span>SCANLINE 3D</span><span>★</span><span>MOTION BLUR</span><span>★</span><span>EXR · DPX · PRORES</span><span>★</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="gpu" class="section gpu-section">
+        <div class="gpu-intro">
+          <span class="ep">NEW IN 0.12 / GPU ACCELERATION</span>
+          <h2>A new engine<br>for the next frame.</h2>
+          <p>The GPU chapter starts here. A shared <code>wgpu</code> foundation brings Vulkan on Linux and Metal on macOS to ArclightVFX.</p>
+          <a class="text-link" href="#download">Explore the beta <span>↗</span></a>
+        </div>
+        <div class="gpu-details">
+          <article><span>01 / CONTROL</span><h3>Your GPU. Your choice.</h3><p>Enable or disable GPU acceleration in Preferences → Performance. The same setting follows you into the CLI, Python, and MCP.</p></article>
+          <article><span>02 / VISIBILITY</span><h3>Know what’s running.</h3><p>Check your adapter and backend, or run the built-in GPU self-test from the Help menu or with <code>arclight gpu --check</code>.</p></article>
+          <p class="gpu-note"><b>Foundation release · 0.12.0</b> GPU setup, controls, and diagnostics are available. Node evaluation still runs on the CPU in this release; accelerated node and rendering paths are the next milestones.</p>
+        </div>
+      </section>
+
+      <!-- CORE -->
+      <section id="power" class="section">
+        <header class="sec-head">
+          <span class="ep">01 / COMPOSITING ENGINE</span>
+          <h2>Built for the whole shot</h2>
+          <p>The pipeline makes the choices a compositor should make, everywhere, so your edges stay clean.</p>
+        </header>
+        <div class="stats">
+          <article class="stat">
+            <div class="stat-num">32<small>bit</small></div>
+            <h3>Float RGBA</h3>
+            <p>Every pixel, every node. Values above 1.0 survive until you decide otherwise.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-num">lin<small>ear</small></div>
+            <h3>Linear light</h3>
+            <p>sRGB encode/decode only at the 8-bit boundary. Light adds the way light adds.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-num">pre<small>mult</small></div>
+            <h3>Associated alpha</h3>
+            <p>Premultiplied throughout — blurs and merges fade cleanly with no dark fringing.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-num">DAG</div>
+            <h3>Cached graph</h3>
+            <p>Each node cached by a hash of op, params and inputs. Edit one; only downstream re-renders.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-num">∞<small>cores</small></div>
+            <h3>Parallel</h3>
+            <p>Per-pixel work spread across every core with Rayon; a frame cache reuses results as you scrub.</p>
+          </article>
+          <article class="stat">
+            <div class="stat-num">200<small>undo</small></div>
+            <h3>Safe to explore</h3>
+            <p>Every graph edit is undoable. A whole slider drag is one step.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- DOJO -->
+      <section id="dojo" class="section">
+        <header class="sec-head">
+          <span class="ep">02 / INTERACTIVE NODE GRAPH</span>
+          <h2>The node dojo</h2>
+          <p>A tiny in-browser taste of an Arclight graph. Click a node to open its properties, tweak, and watch the viewer update.</p>
+        </header>
+        <div class="dojo">
+          <div class="panel dojo-graph">
+            <div class="panel-title">Node Graph</div>
+            <svg id="graph" viewBox="0 0 420 360" role="img" aria-label="Example node graph"></svg>
+          </div>
+          <div class="panel dojo-viewer">
+            <div class="panel-title">Viewer <span id="viewing" class="muted"></span></div>
+            <canvas id="viewer" width="480" height="270"></canvas>
+            <div class="readout" id="readout">hover the image for a float readout</div>
+          </div>
+          <div class="panel dojo-props">
+            <div class="panel-title">Properties</div>
+            <div id="props"></div>
+          </div>
+        </div>
+        <details class="json-peek">
+          <summary>See it as Arclight graph JSON</summary>
+          <pre><code id="graph-json"></code></pre>
+        </details>
+      </section>
+
+      <!-- ARSENAL -->
+      <section id="arsenal" class="section">
+        <header class="sec-head">
+          <span class="ep">03 / NODE LIBRARY</span>
+          <h2>The arsenal</h2>
+          <p>Every node ships with generated property panels, keyframes on every numeric param, and optional masks.</p>
+        </header>
+        <div class="tabs" id="cat-tabs" role="tablist"></div>
+        <div class="cards" id="op-cards"></div>
+      </section>
+
+      <!-- EPISODES -->
+      <section id="episodes" class="section">
+        <header class="sec-head">
+          <span class="ep">04 / CREATIVE TOOLKIT</span>
+          <h2>One graph. More possibilities.</h2>
+          <p>The big set pieces — each one wired into the same graph, the same undo history, the same scripting API.</p>
+        </header>
+        <div class="episodes" id="episode-list"></div>
+      </section>
+
+      <!-- SCRIPT -->
+      <section id="script" class="section">
+        <header class="sec-head">
+          <span class="ep">05 / SCRIPTING &amp; AUTOMATION</span>
+          <h2>Creative control, programmable.</h2>
+          <p>Python, MCP for AI agents, native plugins and live formulas all drive one engine API. Scripts can even attach to the running app — their edits land in your undo history.</p>
+        </header>
+        <div class="code-tabs" id="code-tabs"></div>
+        <div class="code-panel panel">
+          <pre><code id="code-body"></code></pre>
+          <p class="code-note" id="code-note"></p>
+        </div>
+      </section>
+
+      <!-- FORMATS -->
+      <section class="section">
+        <header class="sec-head">
+          <span class="ep">06 / MEDIA &amp; FORMATS</span>
+          <h2>Pipeline-ready I/O</h2>
+        </header>
+        <div class="formats">
+          <div class="fmt panel"><h3>In</h3><ul>
+            <li><b>EXR</b> 32-bit float, every pass as a layer, data windows</li>
+            <li><b>DPX</b> 8/10/12/16-bit &amp; float, log → linear via Cineon</li>
+            <li><b>TIFF · TGA · WebP · PNG · JPEG · HDR</b></li>
+            <li><b>Video</b> mp4 · mov · mkv · mxf · webm (via ffmpeg, 10-bit+ kept at 16-bit)</li>
+            <li><b>Sequences</b> drop one frame, get <code>shot.####.exr</code></li>
+            <li><b>3D</b> Alembic <code>.abc</code> · splats <code>.ply .splat .spz</code></li>
+          </ul></div>
+          <div class="fmt panel"><h3>Out</h3><ul>
+            <li><b>ProRes</b> 422 HQ · 4444 + alpha</li>
+            <li><b>DNxHR</b> HQX · 444 (10-bit)</li>
+            <li><b>HEVC · AV1</b> 10-bit · <b>H.264</b> · <b>VP9</b> (+ alpha)</li>
+            <li><b>DPX</b> 10-bit log, video, or 32-bit float</li>
+            <li><b>EXR</b> with depth, P, N, uv, motion, mattes, diffuse…</li>
+            <li><b>Audio</b> carried through to .mov / .mp4 in sync</li>
+          </ul></div>
+        </div>
+      </section>
+
+      <!-- NEXT -->
+      <section id="next" class="section">
+        <header class="sec-head">
+          <span class="ep">07 / ROADMAP</span>
+          <h2>The next chapter</h2>
+          <p>Where the engine goes next. Roadmap items are planned, not included in the current beta.</p>
+        </header>
+        <ol class="next">
+          <li><b>GPU node evaluation &amp; rendering</b> — building on the 0.12 foundation, including a GPU splat path</li>
+          <li><b>Tiled / ROI processing</b> for very large images</li>
+          <li><b>Python plugins</b> — custom nodes written in Python</li>
+          <li><b>USD / Hydra</b></li>
+          <li><b>Distro packages</b> (deb / rpm / AUR) and notarized macOS builds</li>
+          <li><b>Windows</b> — the engine and GUI already cross-compile</li>
+        </ol>
+      </section>
+
+      <!-- DOWNLOAD -->
+      <section id="download" class="section download">
+        <div class="dl-card">
+          <span class="ep">08 / GET ARCLIGHTVFX</span>
+          <h2>Join the beta</h2>
+          <p>Linux x86_64 tarball, a universal macOS DMG (Apple Silicon and Intel) and Python wheels.
+            Choose an available build from the release list; replace <code>VERSION</code> below with its version. Video I/O needs <code>ffmpeg</code> on your <code>PATH</code>.</p>
+          <div class="cta">
+            <a class="btn" href="https://github.com/nsoler/arclight/releases">Browse beta releases ↗</a>
+            <a class="btn btn-ghost" href="https://github.com/nsoler/arclight">Source on GitHub</a>
+          </div>
+          <pre class="term"><code><span class="c">$</span> tar xf arclightvfx-VERSION-linux-x86_64.tar.gz &amp;&amp; ./install.sh
+<span class="c">$</span> arclight-gui comp.json
+<span class="c">$</span> pip install arclt-VERSION-cp310-abi3-*.whl</code></pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p>ArclightVFX Compositor — original work, written in Rust. Not derived from any existing compositing product.</p>
+      <p class="muted">Read. Connect. Create.</p>
+    </footer>
+
+  </body>
+</html>
