@@ -1,0 +1,5 @@
+color 1: #1B8684
+color 2: #D8E7BC
+color 3: #973213
+color 4: #C5DD43
+color 5: #1A996C
