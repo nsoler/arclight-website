@@ -5,23 +5,65 @@
 const W = 480
 const H = 270
 
-const toLinear = (c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
-const toSrgb = (c) => {
+type Img = Float32Array
+type Rgb = [number, number, number]
+
+const toLinear = (c: number): number => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)
+const toSrgb = (c: number): number => {
   c = Math.min(Math.max(c, 0), 1)
   return c <= 0.0031308 ? c * 12.92 : 1.055 * c ** (1 / 2.4) - 0.055
 }
-const hexToLinear = (hex) => {
+const hexToLinear = (hex: string): Rgb => {
   const n = parseInt(hex.slice(1), 16)
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => toLinear(v / 255))
+  return [toLinear(((n >> 16) & 255) / 255), toLinear(((n >> 8) & 255) / 255), toLinear((n & 255) / 255)]
 }
-const smoothstep = (a, b, x) => {
+const smoothstep = (a: number, b: number, x: number): number => {
   const t = Math.min(Math.max((x - a) / (b - a), 0), 1)
   return t * t * (3 - 2 * t)
 }
 
 // ---- node definitions -------------------------------------------------------
 
-const nodes = {
+type ParamValue = number | string | boolean
+
+// one entry per row in the properties panel
+type Spec = { key: string; hint?: string } & (
+  | { type: 'range'; min: number; max: number; step: number }
+  | { type: 'color' }
+  | { type: 'check' }
+  | { type: 'select'; options: string[] }
+)
+
+type NodeId = 'checker' | 'grade' | 'ellipse' | 'blur' | 'merge' | 'viewer'
+
+interface DojoNode<Op extends string, P> {
+  label: string
+  op: Op
+  x: number
+  y: number
+  inputs: NodeId[]
+  params: P
+  spec: Spec[]
+}
+
+interface CheckerParams { size: number; color_a: string; color_b: string }
+interface GradeParams { multiply: number; gamma: number; saturation: number }
+interface EllipseParams { center_x: number; center_y: number; radius: number; feather: number; color: string; animate: boolean }
+interface BlurParams { radius: number; passes: number }
+type MergeOperation = 'over' | 'screen' | 'add' | 'multiply' | 'max' | 'min'
+interface MergeParams { operation: MergeOperation; mix: number }
+
+interface Graph {
+  checker: DojoNode<'checkerboard', CheckerParams>
+  grade: DojoNode<'grade', GradeParams>
+  ellipse: DojoNode<'ellipse', EllipseParams>
+  blur: DojoNode<'blur', BlurParams>
+  merge: DojoNode<'merge', MergeParams>
+  viewer: DojoNode<'viewer', Record<string, never>>
+}
+type AnyNode = Graph[NodeId]
+
+const nodes: Graph = {
   checker: {
     label: 'Checkerboard', op: 'checkerboard', x: 20, y: 30, inputs: [],
     params: { size: 30, color_a: '#1b201d', color_b: '#343b37' },
@@ -73,14 +115,16 @@ const nodes = {
   },
 }
 
+const nodeEntries = Object.entries(nodes) as [NodeId, AnyNode][]
+
 const NODE_W = 150
 const NODE_H = 34
 
 // ---- image ops ---------------------------------------------------------------
 
-const newImage = () => new Float32Array(W * H * 4)
+const newImage = (): Img => new Float32Array(W * H * 4)
 
-function renderChecker(p) {
+function renderChecker(p: CheckerParams): Img {
   const out = newImage()
   const a = hexToLinear(p.color_a)
   const b = hexToLinear(p.color_b)
@@ -94,7 +138,7 @@ function renderChecker(p) {
   return out
 }
 
-function renderGrade(src, p) {
+function renderGrade(src: Img, p: GradeParams): Img {
   const out = newImage()
   const g = 1 / p.gamma
   for (let i = 0; i < out.length; i += 4) {
@@ -112,7 +156,7 @@ function renderGrade(src, p) {
   return out
 }
 
-function renderEllipse(p, frame) {
+function renderEllipse(p: EllipseParams, frame: number): Img {
   const out = newImage()
   const c = hexToLinear(p.color)
   const cx = p.animate ? 240 + 150 * Math.sin(frame / 14) : p.center_x
@@ -131,13 +175,13 @@ function renderEllipse(p, frame) {
   return out
 }
 
-function boxPass(src, dst, r, horizontal) {
+function boxPass(src: Img, dst: Img, r: number, horizontal: boolean): void {
   const n = 2 * r + 1
   const outer = horizontal ? H : W
   const inner = horizontal ? W : H
   for (let o = 0; o < outer; o++) {
     for (let ch = 0; ch < 4; ch++) {
-      const idx = (k) => {
+      const idx = (k: number): number => {
         const kk = Math.min(Math.max(k, 0), inner - 1)
         return (horizontal ? o * W + kk : kk * W + o) * 4 + ch
       }
@@ -151,9 +195,9 @@ function boxPass(src, dst, r, horizontal) {
   }
 }
 
-function renderBlur(src, p) {
+function renderBlur(src: Img, p: BlurParams): Img {
   if (p.radius < 1) return src
-  let a = Float32Array.from(src)
+  let a: Img = Float32Array.from(src)
   let b = newImage()
   for (let i = 0; i < p.passes; i++) {
     boxPass(a, b, p.radius, true);  [a, b] = [b, a]
@@ -162,14 +206,14 @@ function renderBlur(src, p) {
   return a
 }
 
-function renderMerge(A, B, p) {
+function renderMerge(A: Img, B: Img, p: MergeParams): Img {
   const out = newImage()
   for (let i = 0; i < out.length; i += 4) {
     const aa = A[i + 3]
     for (let ch = 0; ch < 4; ch++) {
       const a = A[i + ch]
       const b = B[i + ch]
-      let v
+      let v: number
       switch (p.operation) {
         case 'over': v = a + b * (1 - aa); break
         case 'screen': v = a + b - a * b; break
@@ -186,20 +230,20 @@ function renderMerge(A, B, p) {
 
 // ---- evaluation (cached per node, like the engine) ------------------------------
 
-const cache = new Map()
-const hashOf = (id, frame) => {
+const cache = new Map<NodeId, { h: string; img: Img }>()
+const hashOf = (id: NodeId, frame: number): string => {
   const n = nodes[id]
-  const time = id === 'ellipse' && n.params.animate ? frame : 0
+  const time = id === 'ellipse' && nodes.ellipse.params.animate ? frame : 0
   return JSON.stringify([n.params, n.inputs.map((i) => hashOf(i, frame)), time])
 }
 
-function evaluate(id, frame) {
-  const n = nodes[id]
+function evaluate(id: NodeId, frame: number): Img {
+  const n: AnyNode = nodes[id]
   const h = hashOf(id, frame)
   const hit = cache.get(id)
   if (hit && hit.h === h) return hit.img
   const ins = n.inputs.map((i) => evaluate(i, frame))
-  let img
+  let img: Img
   switch (n.op) {
     case 'checkerboard': img = renderChecker(n.params); break
     case 'grade': img = renderGrade(ins[0], n.params); break
@@ -214,36 +258,40 @@ function evaluate(id, frame) {
 
 // ---- UI ----------------------------------------------------------------------
 
-export function initDojo() {
-  const svg = document.getElementById('graph')
-  const canvas = document.getElementById('viewer')
-  const props = document.getElementById('props')
-  const viewing = document.getElementById('viewing')
-  const readout = document.getElementById('readout')
-  const jsonOut = document.getElementById('graph-json')
+export function initDojo(): void {
+  const svg = document.getElementById('graph') as SVGSVGElement | null
+  const canvas = document.getElementById('viewer') as HTMLCanvasElement | null
+  const props = document.getElementById('props')!
+  const viewing = document.getElementById('viewing')!
+  const readout = document.getElementById('readout')!
+  const jsonOut = document.getElementById('graph-json')!
   if (!svg || !canvas) return
 
-  const ctx = canvas.getContext('2d')
+  const ctx = canvas.getContext('2d')!
   const imageData = ctx.createImageData(W, H)
-  let selected = 'ellipse'
-  let viewed = 'viewer'
+  let selected: NodeId = 'ellipse'
+  let viewed: NodeId = 'viewer'
   let frame = 1
-  let current = null
+  let current: Img | null = null
   let dirty = true
 
   const ns = 'http://www.w3.org/2000/svg'
-  const el = (tag, attrs, parent) => {
+  const el = <K extends keyof SVGElementTagNameMap>(
+    tag: K,
+    attrs: Record<string, string | number>,
+    parent?: Element,
+  ): SVGElementTagNameMap[K] => {
     const e = document.createElementNS(ns, tag)
-    for (const k in attrs) e.setAttribute(k, attrs[k])
+    for (const k in attrs) e.setAttribute(k, String(attrs[k]))
     parent?.appendChild(e)
     return e
   }
 
-  function drawGraph() {
-    svg.innerHTML = ''
-    const wires = el('g', {}, svg)
+  function drawGraph(): void {
+    svg!.innerHTML = ''
+    const wires = el('g', {}, svg!)
     const ports = ['A', 'B']
-    for (const [id, n] of Object.entries(nodes)) {
+    for (const [, n] of nodeEntries) {
       n.inputs.forEach((src, k) => {
         const s = nodes[src]
         const x1 = s.x + NODE_W / 2
@@ -258,14 +306,14 @@ export function initDojo() {
         }
       })
     }
-    for (const [id, n] of Object.entries(nodes)) {
+    for (const [id, n] of nodeEntries) {
       const g = el('g', {
         class: `node node-${n.op}${id === selected ? ' selected' : ''}`,
         transform: `translate(${n.x},${n.y})`,
         tabindex: 0,
         role: 'button',
         'aria-label': `${n.label} node`,
-      }, svg)
+      }, svg!)
       el('rect', { width: NODE_W, height: NODE_H, rx: 6, class: 'node-body' }, g)
       el('rect', { width: 8, height: NODE_H, rx: 3, class: 'node-stripe' }, g)
       const t = el('text', { x: 18, y: 22, class: 'node-label' }, g)
@@ -280,7 +328,7 @@ export function initDojo() {
       })
       if (id !== 'viewer') el('circle', { cx: NODE_W / 2, cy: NODE_H, r: 5, class: 'port-out' }, g)
 
-      const pick = () => {
+      const pick = (): void => {
         selected = id
         if (id === 'viewer') viewed = 'viewer'
         drawGraph(); drawProps(); dirty = true
@@ -294,8 +342,10 @@ export function initDojo() {
     }
   }
 
-  function drawProps() {
+  function drawProps(): void {
     const n = nodes[selected]
+    // the panel edits params generically by key, as listed in each node's spec
+    const params = n.params as Record<string, ParamValue>
     props.innerHTML = ''
     const h = document.createElement('h4')
     h.innerHTML = `${n.label} <span class="muted">${n.op}</span>`
@@ -313,27 +363,29 @@ export function initDojo() {
       name.className = 'prop-name'
       name.innerHTML = `<i class="key-diamond">◇</i>${s.key}`
       row.appendChild(name)
-      let input
+      let input: HTMLInputElement | HTMLSelectElement
       if (s.type === 'select') {
-        input = document.createElement('select')
+        const select = document.createElement('select')
         for (const o of s.options) {
           const opt = document.createElement('option')
           opt.value = opt.textContent = o
-          input.appendChild(opt)
+          select.appendChild(opt)
         }
-        input.value = n.params[s.key]
+        select.value = String(params[s.key])
+        input = select
       } else {
-        input = document.createElement('input')
-        input.type = s.type === 'range' ? 'range' : s.type === 'check' ? 'checkbox' : 'color'
-        if (s.type === 'range') Object.assign(input, { min: s.min, max: s.max, step: s.step })
-        if (s.type === 'check') input.checked = n.params[s.key]
-        else input.value = n.params[s.key]
+        const field = document.createElement('input')
+        field.type = s.type === 'range' ? 'range' : s.type === 'check' ? 'checkbox' : 'color'
+        if (s.type === 'range') Object.assign(field, { min: s.min, max: s.max, step: s.step })
+        if (s.type === 'check') field.checked = Boolean(params[s.key])
+        else field.value = String(params[s.key])
+        input = field
       }
       const val = document.createElement('output')
-      const show = () => { val.textContent = s.type === 'range' ? (+n.params[s.key]).toFixed(s.step < 1 ? 2 : 0) : '' }
+      const show = (): void => { val.textContent = s.type === 'range' ? (+params[s.key]).toFixed(s.step < 1 ? 2 : 0) : '' }
       show()
       input.addEventListener('input', () => {
-        n.params[s.key] = s.type === 'check' ? input.checked : s.type === 'range' ? +input.value : input.value
+        params[s.key] = s.type === 'check' ? (input as HTMLInputElement).checked : s.type === 'range' ? +input.value : input.value
         show(); dirty = true
       })
       row.appendChild(input)
@@ -348,17 +400,17 @@ export function initDojo() {
     }
   }
 
-  function writeJson() {
-    const list = Object.entries(nodes).map(([id, n]) => {
-      const params = { ...n.params }
+  function writeJson(): void {
+    const list = nodeEntries.map(([id, n]) => {
+      const params: Record<string, unknown> = { ...n.params }
       if (n.op === 'ellipse') {
         params.center = params.animate
           ? { link: { expr: '[240 + 150 * sin(frame / 14), ' + params.center_y + ']' } }
           : [params.center_x, params.center_y]
-        params.size = [params.radius * 2, params.radius * 2]
+        params.size = [n.params.radius * 2, n.params.radius * 2]
         delete params.center_x; delete params.center_y; delete params.radius; delete params.animate
       }
-      const o = { id, op: n.op }
+      const o: { id: NodeId; op: string; inputs?: NodeId[]; params?: Record<string, unknown> } = { id, op: n.op }
       if (n.inputs.length) o.inputs = n.inputs
       if (Object.keys(params).length) o.params = params
       return '    ' + JSON.stringify(o)
@@ -366,14 +418,15 @@ export function initDojo() {
     jsonOut.textContent = `{\n  "nodes": [\n${list.join(',\n')}\n  ]\n}`
   }
 
-  function render() {
+  function render(): void {
     const id = viewed === 'viewer' ? 'merge' : viewed
-    current = evaluate(id, frame)
+    const img = evaluate(id, frame)
+    current = img
     const d = imageData.data
-    for (let i = 0; i < current.length; i += 4) {
-      d[i] = toSrgb(current[i]) * 255
-      d[i + 1] = toSrgb(current[i + 1]) * 255
-      d[i + 2] = toSrgb(current[i + 2]) * 255
+    for (let i = 0; i < img.length; i += 4) {
+      d[i] = toSrgb(img[i]) * 255
+      d[i + 1] = toSrgb(img[i + 1]) * 255
+      d[i + 2] = toSrgb(img[i + 2]) * 255
       d[i + 3] = 255
     }
     ctx.putImageData(imageData, 0, 0)
@@ -387,7 +440,7 @@ export function initDojo() {
     const x = Math.floor(((e.clientX - r.left) / r.width) * W)
     const y = Math.floor(((e.clientY - r.top) / r.height) * H)
     const i = (y * W + x) * 4
-    const f = (v) => v.toFixed(4)
+    const f = (v: number): string => v.toFixed(4)
     readout.textContent = `x ${x} y ${y}   R ${f(current[i])}  G ${f(current[i + 1])}  B ${f(current[i + 2])}  A ${f(current[i + 3])}`
   })
 
@@ -396,7 +449,7 @@ export function initDojo() {
   new IntersectionObserver(([e]) => { visible = e.isIntersecting }).observe(canvas)
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   let last = 0
-  function tick(t) {
+  function tick(t: number): void {
     if (visible && nodes.ellipse.params.animate && !reduce && t - last > 40) {
       frame = frame >= 240 ? 1 : frame + 1
       last = t

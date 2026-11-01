@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "typecheck": "tsc",
+    "build": "tsc && vite build",
     "start": "vite preview"
   },
   "devDependencies": {
+    "typescript": "~5.9",
     "vite": "^6.4.5"
   }
 }

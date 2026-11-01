@@ -5,7 +5,7 @@ plan works. Uploads are done over FTP/SFTP.
 
 ## Project files involved
 
-- `vite.config.js`: `base: './'` makes all asset links relative, so the site
+- `vite.config.ts`: `base: './'` makes all asset links relative, so the site
   works at the domain root (`public_html/`) or in a subfolder.
 - `public/.htaccess`: Apache settings, copied into `dist/` on every build. It:
   - redirects http to https
@@ -17,7 +17,8 @@ plan works. Uploads are done over FTP/SFTP.
 
 ## Steps
 
-1. **Build** (repeat after every change):
+1. **Build** (repeat after every change). This type-checks the TypeScript
+   and compiles it to plain JavaScript; nothing TypeScript-specific is uploaded:
 
    ```sh
    npm run build

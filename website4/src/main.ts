@@ -1,22 +1,29 @@
 import './style.css'
-import { categories, ops, episodes, codeSamples } from './data.js'
-import { initDojo } from './dojo.js'
-import { icon } from './icons.js'
+import { categories, ops, episodes, codeSamples, type CategoryId, type CodeLang } from './data'
+import { initDojo } from './dojo'
+import { icon } from './icons'
+
+// Fails loudly if index.html and the scripts drift apart.
+function byId<T extends HTMLElement = HTMLElement>(id: string): T {
+  const el = document.getElementById(id)
+  if (!el) throw new Error(`#${id} not found`)
+  return el as T
+}
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 // ---- arsenal ------------------------------------------------------------------
 
 function initArsenal() {
-  const tabs = document.getElementById('cat-tabs')
-  const grid = document.getElementById('op-cards')
-  let active = 'all'
+  const tabs = byId('cat-tabs')
+  const grid = byId('op-cards')
+  let active: CategoryId = 'all'
 
   const render = () => {
     tabs.innerHTML = categories.map((c) =>
       `<button role="tab" aria-selected="${c.id === active}" data-cat="${c.id}">
         ${icon(c.icon)}${c.label}</button>`).join('')
-    const label = Object.fromEntries(categories.map((c) => [c.id, c.label]))
+    const label = Object.fromEntries(categories.map((c) => [c.id, c.label])) as Record<CategoryId, string>
     grid.innerHTML = ops
       .filter((o) => active === 'all' || o.cat === active)
       .map((o) => `
@@ -27,9 +34,9 @@ function initArsenal() {
         </article>`).join('')
   }
   tabs.addEventListener('click', (e) => {
-    const b = e.target.closest('button')
+    const b = (e.target as Element).closest('button')
     if (!b) return
-    active = b.dataset.cat
+    active = b.dataset.cat as CategoryId
     render()
   })
   render()
@@ -38,7 +45,7 @@ function initArsenal() {
 // ---- episodes -----------------------------------------------------------------
 
 function initEpisodes() {
-  document.getElementById('episode-list').innerHTML = episodes.map((e, i) => `
+  byId('episode-list').innerHTML = episodes.map((e, i) => `
     <article class="episode reveal">
       <div class="episode-art" aria-hidden="true">
         <span class="episode-num">${String(i + 1).padStart(2, '0')}</span>
@@ -55,15 +62,15 @@ function initEpisodes() {
 
 // ---- code tabs ----------------------------------------------------------------
 
-const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const escapeHtml = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 // a deliberately small highlighter: strings, comments, numbers, keywords
-function highlight(code, lang) {
+function highlight(code: string, lang: CodeLang): string {
   const kw = lang === 'python' ? /\b(import|from|as|def|return|for|in|if|else|True|False|None)\b/g : /\b(cargo|cp|arclight|claude|tar|pip)\b/g
   const comment = lang === 'json' ? null : /#.*$/gm
-  const tokens = []
+  const tokens: string[] = []
   // placeholders use private-use characters so later passes can't match inside them
-  const stash = (cls) => (m) => {
+  const stash = (cls: string) => (m: string): string => {
     tokens.push(`<span class="${cls}">${m}</span>`)
     return `${String.fromCharCode(0xE100 + tokens.length - 1)}`
   }
@@ -72,25 +79,25 @@ function highlight(code, lang) {
   s = s.replace(/"(?:[^"\\]|\\.)*"/g, stash('tk-s'))
   s = s.replace(kw, stash('tk-k'))
   s = s.replace(/\b\d+(\.\d+)?\b/g, stash('tk-n'))
-  const restore = (str) => str.replace(/(.)/g, (_, c) => tokens[c.charCodeAt(0) - 0xE100])
+  const restore = (str: string): string => str.replace(/(.)/g, (_, c: string) => tokens[c.charCodeAt(0) - 0xE100])
   return restore(restore(s))
 }
 
 function initCode() {
-  const tabs = document.getElementById('code-tabs')
-  const body = document.getElementById('code-body')
-  const note = document.getElementById('code-note')
+  const tabs = byId('code-tabs')
+  const body = byId('code-body')
+  const note = byId('code-note')
   let active = codeSamples[0].id
   const render = () => {
     tabs.innerHTML = codeSamples.map((c) =>
       `<button aria-pressed="${c.id === active}" data-id="${c.id}">${c.label}</button>`).join('')
-    const c = codeSamples.find((c) => c.id === active)
+    const c = codeSamples.find((c) => c.id === active) ?? codeSamples[0]
     body.innerHTML = highlight(c.code, c.lang)
     note.textContent = c.note
   }
   tabs.addEventListener('click', (e) => {
-    const b = e.target.closest('button')
-    if (!b) return
+    const b = (e.target as Element).closest('button')
+    if (!b?.dataset.id) return
     active = b.dataset.id
     render()
   })
@@ -100,7 +107,7 @@ function initCode() {
 // ---- scroll reveal --------------------------------------------------------------
 
 function initReveal() {
-  document.querySelectorAll('.sec-head, .stat, .panel, .dl-card, .next li').forEach((n) => n.classList.add('reveal'))
+  document.querySelectorAll<HTMLElement>('.sec-head, .stat, .panel, .dl-card, .next li').forEach((n) => n.classList.add('reveal'))
   if (reduceMotion) {
     document.querySelectorAll('.reveal').forEach((n) => n.classList.add('in'))
     return
@@ -119,15 +126,15 @@ initCode()
 initDojo()
 initReveal()
 
-const menu = document.querySelector('.menu-toggle')
-const navigation = document.getElementById('main-nav')
+const menu = document.querySelector<HTMLButtonElement>('.menu-toggle')!
+const navigation = byId('main-nav')
 menu.addEventListener('click', () => {
  const open = menu.getAttribute('aria-expanded') !== 'true'
  menu.setAttribute('aria-expanded', String(open))
  navigation.classList.toggle('is-open', open)
 })
 navigation.addEventListener('click', (event) => {
- if (event.target.closest('a')) {
+ if ((event.target as Element).closest('a')) {
   menu.setAttribute('aria-expanded', 'false')
   navigation.classList.remove('is-open')
  }

@@ -12,8 +12,10 @@ const paths = {
   cloud: '<circle cx="6" cy="7" r="1"/><circle cx="12" cy="4" r="1"/><circle cx="18" cy="7" r="1"/><circle cx="3" cy="13" r="1"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/><circle cx="21" cy="13" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="16" r="1"/><circle cx="18" cy="18" r="1"/><circle cx="12" cy="22" r="1"/>',
   code: '<path d="m8 6-6 6 6 6m8-12 6 6-6 6M14 3l-4 18"/>',
   motion: '<path d="M2 6h8M1 12h6M2 18h8"/><circle cx="16" cy="12" r="7"/><path d="M16 8v4l3 2"/>',
-}
+} satisfies Record<string, string>
 
-export function icon(name) {
-  return `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${paths[name] || paths.grid}</svg>`
+export type IconName = keyof typeof paths
+
+export function icon(name: IconName): string {
+  return `<svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${paths[name] ?? paths.grid}</svg>`
 }

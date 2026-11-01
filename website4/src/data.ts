@@ -1,7 +1,42 @@
 // Product copy verified against the Arclight 0.13.21 development source.
 // See ../../FEATURES.md for scope, evidence and release caveats.
 
-export const categories = [
+import type { IconName } from './icons'
+
+export type CategoryId = 'all' | 'color' | 'comp' | 'warp' | 'shape' | 'track' | '3d' | 'geo' | 'fx' | 'io'
+
+export interface Category {
+  id: CategoryId
+  label: string
+  icon: IconName
+}
+
+export interface Op {
+  cat: Exclude<CategoryId, 'all'>
+  name: string
+  desc: string
+  mask?: boolean
+}
+
+export interface Episode {
+  tag: string
+  title: string
+  icon: IconName
+  body: string
+  bullets: string[]
+}
+
+export type CodeLang = 'python' | 'json' | 'sh'
+
+export interface CodeSample {
+  id: string
+  label: string
+  lang: CodeLang
+  note: string
+  code: string
+}
+
+export const categories: Category[] = [
   { id: 'all', label: 'All', icon: 'grid' },
   { id: 'color', label: 'Color', icon: 'color' },
   { id: 'comp', label: 'Merge & Key', icon: 'layers' },
@@ -14,7 +49,7 @@ export const categories = [
   { id: 'io', label: 'I/O', icon: 'io' },
 ]
 
-export const ops = [
+export const ops: Op[] = [
   { cat: 'geo', name: 'Scatter · Instance on Points', desc: 'Dress sets with meshes, cards or splat captures. Scatter over surfaces, within volumes or on tracker points; control density with a mask.' },
   { cat: 'geo', name: 'Attribute Set · Attribute Noise', desc: 'Vary position, size and color with formulas and repeatable noise instead of editing every element by hand.' },
   { cat: 'geo', name: 'Falloff · Attribute from Image', desc: 'Shape procedural changes by distance or a soft region, and sample a plate or painted map into geometry attributes.' },
@@ -54,7 +89,7 @@ export const ops = [
   { cat: 'io', name: 'Native plugins', desc: 'A small C ABI; plugins run isolated in helper processes, so a crash is just a node error.' },
 ]
 
-export const episodes = [
+export const episodes: Episode[] = [
   {
     tag: 'GEO', title: 'Build detail procedurally', icon: 'cube',
     body: 'Turn a few assets into a dressed environment with geometry nodes. Scatter stable points, instance your meshes or cards, then use attributes to vary size, orientation and tint. Project a plate into attributes to help the detail belong in the shot.',
@@ -104,7 +139,7 @@ export const episodes = [
   },
 ]
 
-export const codeSamples = [
+export const codeSamples: CodeSample[] = [
   {
     id: 'python',
     label: 'Python · arclt',
